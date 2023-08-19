@@ -3,10 +3,9 @@ from django.core.exceptions import FieldDoesNotExist
 from django.db.models import ManyToManyField
 from django_tables2 import columns
 from django.db.models.fields.related import RelatedField
-from django_tables2 import Table, tables
+from django_tables2 import Table
 from django_tables2.data import TableQuerysetData
 from app.models import CarCombined
-
 
 
 class BaseTable(Table):

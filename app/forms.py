@@ -1,9 +1,7 @@
-from django import forms
 from django.urls import reverse
-
-from app.models import Manufacturer, Car, CarModel, CarCombined
+from app.models import Manufacturer, Car
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Row, Column, Submit, Field, Div, Button
+from crispy_forms.layout import Layout, Field, Div, Button
 from django import forms
 from dynamic_forms import DynamicField, DynamicFormMixin
 
@@ -33,22 +31,20 @@ class ManufacturersForm(DynamicFormMixin, forms.Form):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
-                Field('manufacturers', css_class='form-control included',
-                      **{'hx-get': reverse('list_cars'), 'hx-target': '#form', 'hx-trigger': 'change',
+                Field('manufacturers', css_class='included',
+                      **{'hx-get': reverse('index'), 'hx-target': '#form', 'hx-trigger': 'change',
                          'hx-swap': 'outerHTML'}),
-                        css_class='form-group'
                     ),
             Div(
                 Field('cars', css_class='form-control',
-                      **{'hx-get': reverse('list_cars'), 'hx-target': '#form',
+                      **{'hx-get': reverse('index'), 'hx-target': '#form',
                          'hx-swap': 'outerHTML', 'hx-include': '.included'},
                       ),
-                css_class='form-group included'
+                css_class='form-group'
             ),
             Div(
-                Field('price', css_class='form-control'),
+                Field('price'),
 
-                css_class='form-group included'
             ),
             Div(
                 Button(

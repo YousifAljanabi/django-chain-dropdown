@@ -1,21 +1,27 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from app.models import Manufacturer, Car, CarCombined
 from app.forms import ManufacturersForm
 from app.tables import CarsTable
 
+
 def index(request):
+    objs = CarCombined.objects.all()
+    table = CarsTable(objs)
     if request.htmx:
         form = ManufacturersForm(request.GET)
         print(form['manufacturers'].value())
         print(form['cars'].value())
-        return render(request, 'app/index.html', {
+        return render(request, 'app/forms/form.html', {
             'form': form,
+            'table': table,
         })
 
     form = ManufacturersForm()
-    return render(request, 'app/index.html', {
-            'form': form,
-        })
+
+    return render(request, 'app/list_cars.html', {
+        'table': table,
+        'form': form,
+    })
 
 
 def submit(request):
@@ -39,21 +45,3 @@ def submit(request):
         })
 
 
-def list_cars(request):
-    objs = CarCombined.objects.all()
-    table = CarsTable(objs)
-    if request.htmx:
-        form = ManufacturersForm(request.GET)
-        print(form['manufacturers'].value())
-        print(form['cars'].value())
-        return render(request, 'app/forms/form.html', {
-            'form': form,
-            'table': table,
-        })
-
-    form = ManufacturersForm()
-
-    return render(request, 'app/list_cars.html', {
-        'table': table,
-        'form': form,
-    })
