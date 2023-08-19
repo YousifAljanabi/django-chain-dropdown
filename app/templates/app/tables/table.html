@@ -1,0 +1,41 @@
+<div id="{{ table_id }}" class="card-body">
+    <input type="hidden" name="page" value="{{ pagination.current_page }}" class="included">
+
+    <div class="table-responsive table-card overflow-auto" style="max-height: 40rem">
+        <table class="table text-wrap  table-bordered text-nowrap table-striped table-hover table-sm">
+            <thead>
+            <tr>
+
+
+            {% for c in table.columns %}
+            <th>
+                <a >
+                    {{ c.verbose_name }}
+                </a>
+            </th>
+            {% endfor %}
+{% if actions %}
+    <th class="text-center d-print-none">العمليات</th>
+{% endif %}
+
+            </tr>
+            </thead>
+            <tbody>
+                {% for row in table.paginated_rows %}
+                <tr style="{% if row.record.is_canceled %}color: red; text-decoration: line-through;{% endif %}">
+                {% for r, c in row.items %}
+                    <td>
+                        {{ c }}
+                    </td>
+                {% endfor %}
+
+    </tr>
+{% endfor %}
+
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>

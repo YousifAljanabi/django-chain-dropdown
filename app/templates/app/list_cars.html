@@ -1,0 +1,347 @@
+{% load static %}
+{% load static %}
+{% load django_tables2 %}
+{% load l10n %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+<!doctype html>
+<html lang="en" dir="rtl" data-layout="horizontal" data-layout-style="default" data-layout-position="fixed"
+      data-topbar="light"
+      data-layout-width="fluid" data-preloader="disabled">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>OneSight</title>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap-rtl.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app-rtl.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom-rtl.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tom-select.css' %}">
+
+    <style>
+        .asteriskField {
+            color: red;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .row .mb-3 {
+            margin-bottom: 0.2rem !important;
+        }
+
+
+        .table thead th {
+            vertical-align: text-top;
+        }
+
+
+        .table thead th {
+        {#border-top: 1px solid #000 !important;#}{#border-bottom: 1px solid #000 !important;#} border-left: 1px solid lightgrey;
+            border-right: 1px solid lightgrey;
+        }
+
+        .table td {
+            border-left: 1px solid lightgrey;
+            border-right: 1px solid lightgrey;
+        {#border-top: none !important;#}
+        }
+
+        .table-responsive .dropdown {
+            position: static !important;
+        }
+
+
+        @media (min-width: 768px) {
+            .table-responsive {
+                overflow-x: visible;
+            }
+        }
+
+
+        .htmx-swapping {
+            opacity: 0.5;
+            transition: opacity 0.25s ease-in-out;
+        }
+
+    </style>
+</head>
+<link rel="stylesheet" href="{% static 'css/jquery.orgchart.min.css' %}">
+<style>
+    #chart-container {
+        position: relative;
+        height: 420px;
+        border: 1px dashed #aaa;
+        margin: 0.5rem;
+        overflow: auto;
+        text-align: center;
+    }
+</style>
+
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<div id="layout-wrapper">
+    <header id="page-topbar">
+        <div class="layout-width">
+            <div class="navbar-header">
+                <div class="d-flex">
+                    <div class="navbar-brand-box horizontal-logo">
+                        <a href="." class="logo logo-dark">
+                            LOGO
+                        </a>
+
+                    </div>
+
+                    <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
+                            id="topnav-hamburger-icon">
+                    <span class="hamburger-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                    </button>
+
+
+                </div>
+
+
+                <div class="navbar-nav flex-row order-md-last">
+                    <div id="spinner" class="spinner-border mt-2" role="status"></div>
+
+
+                    <div class="mx-2 pt-2" style="direction: ltr; width: 95px ; justify-content: center; ">
+                        <div class='clock' id='dc'></div>
+                        <div class='dH' id='day_year'></div>
+                    </div>
+
+                    <div class="dropdown header-item topbar-user">
+                        <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                        <span class="d-flex align-items-center">
+                            <span class="rounded-circle header-profile-user mt-2">
+                            <i class="fa-light fa-user-tie"></i>
+                            </span>
+                            <span class="text-start ms-xl-2">
+                                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">
+                                    {% if request.user.contact_name %}
+                                        {{ request.user.contact_name }}
+                                    {% else %}
+                                        {{ request.user.email }}
+                                    {% endif %}
+                                </span>
+                                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
+                                    {% if request.user.get_user_type_display %}
+                                        {{ request.user.get_user_type_display }}
+                                    {% else %}
+                                        Superuser
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+
+                            {% if request.user.is_superuser %}
+                                <a class="dropdown-item">
+                                    <i class="fa-light fa-rectangles-mixed"></i>
+                                    &nbsp;&nbsp;
+                                    لوحة التحكم
+                                </a>
+                            {% endif %}
+                            <a class="dropdown-item">
+                                <i class="fa-light fa-sign-out-alt"></i>
+                                &nbsp;&nbsp;
+                                تسجيل الخروج
+                            </a>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="app-menu navbar-menu">
+        <!-- LOGO -->
+        <div class="navbar-brand-box">
+            <!-- Dark Logo-->
+            <div class="navbar-brand-box horizontal-logo">
+                <a href="." class="logo logo-dark">
+                    dw
+                </a>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="vertical-overlay"></div>
+
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <!-- Page header -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0">{{ title }}</h4>
+
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item">
+                                        {% if pretitle %}
+                                            <a href="{{ pretitle_url }}">{{ pretitle }}</a>
+                                        {% endif %}
+                                    </li>
+                                    <li class="breadcrumb-item active">{{ title }}</li>
+                                </ol>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="px-3 py-1">
+
+                </div>
+                <div class="card card-sm" data-np-autofill-type="other" data-np-checked="1" data-np-watching="1">
+
+                    <div class="card-body">
+                        <input type="hidden" name="page" class="included">
+
+                        <div class="table-responsive table-card overflow-auto" style="max-height: 40rem">
+
+                            <table class="table text-wrap  table-bordered text-nowrap table-striped table-hover table-sm">
+                                <thead>
+                                <tr>
+
+                                    {% for c in table.columns %}
+                                        <th>
+
+                                            {{ c.verbose_name }}
+
+                                        </th>
+                                    {% endfor %}
+
+
+                                </tr>
+
+                                </thead>
+                                <tbody>
+
+                                {% for row in table.paginated_rows %}
+                                    <tr style="{% if row.record.is_canceled %}color: red; text-decoration: line-through;{% endif %}">
+                                        {% for r, c in row.items %}
+                                            <td>
+                                                {{ c }}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+
+
+                                </tbody>
+
+                            </table>
+
+
+                        </div>
+
+
+                        <div id="edit_content_item">
+
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <form method="GET" autocomplete="off" id="form">
+                    {% csrf_token %}
+                    {% crispy form %}
+
+                </form>
+                </div>
+
+                <footer class="footer footer-transparent d-print-none">
+                    <div class="container-xl">
+                        <div class="row text-center align-items-center flex-row-reverse">
+                            <div class="col-lg-auto ms-lg-auto">
+                            </div>
+                            <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+                                <ul class="list-inline list-inline-dots mb-0">
+
+                                    <li class="list-inline-item">
+                                        <a href="." class="link-secondary">TwoAbstracts,</a>
+                                        All rights reserved
+                                    </li>
+                                    <li class="list-inline-item">
+                                        Copyright &copy; 2022
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{# <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script> #}
+
+<script src="{% static 'js/layout.js' %}"></script>
+<script src="{% static 'js/htmx.js' %}"></script>
+<script src="{% static 'js/alpine.js' %}" defer></script>
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/select2.js' %}"></script>
+<script src="{% static 'js/tom-select.complete.js' %}"></script>
+{# <script src="{% static 'js/cleavejs.js' %}"></script> #}
+<script src="{% static 'js/cleave-phone.js' %}"></script>
+<script src="{% static 'js/moment.min.js' %}"></script>
+
+
+<script>
+    const loader = htmx.find('#spinner')
+
+    htmx.onLoad(() => {
+        loader.style.opacity = '0'
+
+
+        $('select').each(function () {
+            let control = $(this).get(0)
+            if (control.tomselect) {
+                control.tomselect.destroy()
+            }
+            new TomSelect($(this), {
+                create: true,
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                dropdownParent: 'body',
+                highlight: true,
+                plugins: ['clear_button'],
+                width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+                placeholder: $(this).data('placeholder'),
+            })
+        })
+
+    })
+
+
+
+</script>
+
+
+
+</body>
+</html>

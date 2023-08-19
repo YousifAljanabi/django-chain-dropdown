@@ -1,0 +1,43 @@
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+{% load static %}
+<script src="{% static 'js/layout.js' %}"></script>
+<script src="{% static 'js/htmx.js' %}"></script>
+<script src="{% static 'js/alpine.js' %}" defer></script>
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/select2.js' %}"></script>
+<script src="{% static 'js/tom-select.complete.js' %}"></script>
+<script src="{% static 'js/cleave-phone.js' %}"></script>
+<script src="{% static 'js/moment.min.js' %}"></script>
+
+    <!-- HTMX -->
+
+<script>
+
+htmx.onLoad(() => {
+        $('select').each(function () {
+            let control = $(this).get(0)
+            if (control.tomselect) {
+                control.tomselect.destroy()
+            }
+            new TomSelect($(this), {
+                sortField: {
+                    field: "text",
+                    direction: "asc"
+                },
+                dropdownParent: 'body',
+                highlight: true,
+                plugins: ['clear_button'],
+                width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+                placeholder: $(this).data('placeholder'),
+
+            })
+        })
+
+    })
+
+</script>
+
+

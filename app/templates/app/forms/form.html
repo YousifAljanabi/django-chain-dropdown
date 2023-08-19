@@ -1,0 +1,6 @@
+{% load crispy_forms_tags %}
+<form method="POST" autocomplete="off" id="form">
+    {% csrf_token %}
+    {% crispy form %}
+
+</form>

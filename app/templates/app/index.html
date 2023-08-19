@@ -1,0 +1,28 @@
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chain</title>
+    {% include 'app/styles.html' %}
+</head>
+<body>
+
+    <div>
+        <form method="POST" autocomplete="off" id="form">
+            {% csrf_token %}
+            {% crispy form %}
+            <button type="submit" class="btn btn-primary"
+        hx-post="{% url 'submit' %}" hx-target="body"
+    >Submit</button>
+        </form>
+
+
+    </div>
+</body>
+{% include 'app/scripts.html' %}
+</html>
